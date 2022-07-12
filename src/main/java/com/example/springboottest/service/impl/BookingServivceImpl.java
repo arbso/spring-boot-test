@@ -17,8 +17,9 @@ public class BookingServivceImpl implements Service<Booking, Integer> {
     private BookingRepositoryImpl bookingRepository;
 
     @Override
-    public Booking save(Booking booking) {
-        return bookingRepository.save(booking);
+    public String save(Booking booking) {
+        bookingRepository.save(booking);
+        return null;
 
     }
 

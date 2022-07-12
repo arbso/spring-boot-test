@@ -17,8 +17,10 @@ public class FlightServiceImpl implements Service<Flight, Integer> {
 
 
     @Override
-    public Flight save(Flight flight) {
-        return flightRepository.save(flight);
+    public String save(Flight flight) {
+
+         flightRepository.save(flight);
+        return null;
 
     }
     @Override

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface Service<ENTITY, ID> {
 
-    ENTITY save(ENTITY entity);
+    String save(ENTITY entity);
     void delete(ID id);
     void deleteById(ID id);
     ENTITY findById(ID id);

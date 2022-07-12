@@ -2,6 +2,8 @@ package com.example.springboottest.model;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @javax.persistence.Entity
@@ -19,13 +21,20 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    @ManyToMany
-    private Set<Role> roles;
+    @ElementCollection(fetch = FetchType.EAGER)
+    List<Role> roles;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private UserDetails userDetails;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_details", joinColumns = @JoinColumn(name = "id"))
+    private Set<UserDetails> userDetails= new HashSet<UserDetails>();
 
+    public Set<UserDetails> getUserDetails() {
+        return userDetails;
+    }
+
+    public void setUserDetails(Set<UserDetails> userDetails) {
+        this.userDetails = userDetails;
+    }
 
     public Integer getId() {
         return id;
@@ -51,12 +60,11 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
-
 }

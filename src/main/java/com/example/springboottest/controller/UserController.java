@@ -2,6 +2,8 @@ package com.example.springboottest.controller;
 
 import com.example.springboottest.model.User;
 import com.example.springboottest.service.impl.UserServiceImpl;
+import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,35 +11,31 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// @RestController
 @RestController
 @RequestMapping(value = "/users")
+@Api(tags = "users")
+@RequiredArgsConstructor
 public class UserController {
 
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
+    private final UserServiceImpl userService;
+
+    @PostMapping("/signin")
+    public String login(//
+                         @RequestParam String username, //
+                         @RequestParam String password) {
+        return userService.signin(username, password);
     }
-
-    private UserServiceImpl userService;
-
     @PostMapping("/add")
     public User addUser(@RequestBody User user) {
-        return userService.save(user);
+        userService.save(user);
+        return user;
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @GetMapping(value = "/delete/{id}")
 //    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable Integer id) {
         userService.deleteById(id);
     }
-
-
-//    @GetMapping("/users")
-//    public String listUsers(Model model){
-//        model.addAttribute("users", userService.findAll());
-//        return "userList";
-////        return userService.findAll();
-//    }
 
 
     public List<User> findAllUsers(Model model) {

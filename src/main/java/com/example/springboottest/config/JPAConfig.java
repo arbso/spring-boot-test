@@ -20,7 +20,7 @@ import java.util.Properties;
 @Configuration(proxyBeanMethods = true)
 public class JPAConfig {
 
-    private static final String[] ENTITYMANAGER_PACKAGES_TO_SCAN = "com.example.springboottest.model.User,com.example.springboottest.model.Booking,com.example.springboottest.model.Flight,com.example.springboottest.model.UserDetails".split(",");
+    private static final String[] ENTITYMANAGER_PACKAGES_TO_SCAN = "com.example.springboottest.model.User,com.example.springboottest.model.Booking,com.example.springboottest.model.Flight,com.example.springboottest.model.UserDetails,com.example.springboottest.model.Role".split(",");
 //    @Bean
 //    @ConfigurationProperties("application.properties")
 //    public DataSource dataSource() {

@@ -20,7 +20,8 @@ public class BookingController {
 
     @PostMapping("/add")
     public Booking addBooking(@RequestBody Booking booking) {
-        return bookingServivce.save(booking);
+        bookingServivce.save(booking);
+        return booking;
     }
 
     @DeleteMapping("/delete/{id}")

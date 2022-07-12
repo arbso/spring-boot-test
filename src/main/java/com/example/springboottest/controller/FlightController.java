@@ -20,7 +20,8 @@ public class FlightController {
 
     @PostMapping("/add")
     public Flight addFlight(@RequestBody Flight flight) {
-        return flightService.save(flight);
+        flightService.save(flight);
+        return flight;
     }
 
     @DeleteMapping("/delete/{id}")

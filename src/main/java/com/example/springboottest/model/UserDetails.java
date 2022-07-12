@@ -3,21 +3,21 @@ package com.example.springboottest.model;
 
 import javax.persistence.*;
 
-@javax.persistence.Entity
-@Table(name = "user_details")
+//@javax.persistence.Entity
+//@Table(name = "user_details")
+@Embeddable
 public class UserDetails {
 
-    @OneToOne(targetEntity = User.class)
-    @JoinColumn(name = "userid", referencedColumnName = "id", insertable=false, updatable=false)
-    private User user;
+//    @OneToOne(targetEntity = User.class)
+//    @JoinColumn(name = "userid", referencedColumnName = "id", insertable=false, updatable=false)
+//    private User user;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+//    @Id
+//    @Column(name = "uid")
+//    private int id;
 
 
-    @Column(name = "first_name")
+     @Column(name = "first_name")
     private String firstName;
 
     @Column(name = "last_name")
@@ -27,7 +27,7 @@ public class UserDetails {
     private String email;
 
     @Column(name = "phone_Number")
-    private int phoneNumber;
+    private String phoneNumber;
 
 //    public User getUser() {
 //        return user;
@@ -37,13 +37,13 @@ public class UserDetails {
 //        this.user = user;
 //    }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+//    public int getId() {
+//        return id;
+//    }
+//
+//    public void setId(int id) {
+//        this.id = id;
+//    }
 
     public String getFirstName() {
         return firstName;
@@ -69,11 +69,11 @@ public class UserDetails {
         this.email = email;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 }

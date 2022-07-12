@@ -1,45 +1,53 @@
 package com.example.springboottest.service.impl;
 
+import com.example.springboottest.exception.CustomException;
 import com.example.springboottest.model.Role;
 import com.example.springboottest.model.User;
-import com.example.springboottest.model.UserDetails;
-import com.example.springboottest.repository.RoleRepository;
+//import com.example.springboottest.repository.RoleRepository;
 import com.example.springboottest.repository.UserRepositoryImpl;
+import com.example.springboottest.security.JwtTokenProvider;
 import com.example.springboottest.service.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.ui.Model;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.example.springboottest.misc.PassMD5.cryptWithMD5;
-
 @org.springframework.stereotype.Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements Service<User, Integer> {
 
-    private final RoleRepository roleRepository;
     private final UserRepositoryImpl userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
 
-    public UserServiceImpl(UserRepositoryImpl userRepository, RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    public String signin(String username, String password) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            return jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRoles());
+        } catch (AuthenticationException e) {
+            throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
+
     @Override
-    public User save(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(new HashSet<>(roleRepository.findAll()));
-        return userRepository.save(user);
+    public String save(User user) {
+        if (!userRepository.existsByUsername(user.getUsername())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoles(new ArrayList<Role>(Arrays.asList(Role.ROLE_USER)));
+            userRepository.save(user);
+            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+        } else {
+            throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
     @Override
@@ -57,8 +65,8 @@ public class UserServiceImpl implements Service<User, Integer> {
         return userRepository.findAll();
     }
 
-    public User findByUsername(String username){
-        return userRepository.findByusername(username);
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
 
